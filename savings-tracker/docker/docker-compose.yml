@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+
+  sql-server:
+    build: 
+      context: ./db
+      dockerfile: Dockerfile
+    container_name: sql-server
+    environment:
+      - SA_PASSWORD=VerySecret1234!
+    ports:
+      - "1433:1433"

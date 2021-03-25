@@ -1,4 +1,4 @@
-// src/components/Savings.tsx
+// src/components/BankAccounts.tsx
 
 import React from "react";
 import axios from "axios";
@@ -16,11 +16,11 @@ function BankAccounts() {
         <ul className="bankAccounts">
             {Object.entries(bankAccounts).map(([key, value]) =>
                 <li className="bankAccount" key={key}>
-                    <h4>{value.name}</h4>
-                    <p>{value.description}</p>
+                    {value.name} ({key})
                 </li>
-            )}
-        </ul>
+            )
+            }
+        </ul >
     );
 }
 

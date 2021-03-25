@@ -2,6 +2,20 @@
 
 import React from "react";
 import axios from "axios";
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
+const useStyles = makeStyles({
+    table: {
+        minWidth: 650,
+    },
+});
 
 function Savings() {
     const [savings, setSavings] = React.useState<any[]>([])
@@ -15,14 +29,31 @@ function Savings() {
             });
     }, []);
 
+    const classes = useStyles();
+
     return (
-        <ul className="savings">
-            {savings.map((s) => (
-                <li className="s" key={s.id}>
-                    <p>{s.amount} {s.currency}</p>
-                </li>
-            ))}
-        </ul>
+        <TableContainer component={Paper} >
+            <Table className={classes.table} aria-label="simple table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Transfer Date</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Source Account</TableCell>
+                        <TableCell>Destination Account</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {savings.map((row) => (
+                        <TableRow key={row.id}>
+                            <TableCell>{row.transfer_date}</TableCell>
+                            <TableCell>{row.amount} {row.currency}</TableCell>
+                            <TableCell>{row.src_account.name == null ? row.src_account.code : row.src_account.name + " (" + row.src_account.description + ")"}</TableCell>
+                            <TableCell>{row.dest_account.name == null ? row.dest_account.code : row.dest_account.name + " (" + row.src_account.description + ")"}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
     );
 }
 

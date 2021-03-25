@@ -3,8 +3,11 @@
 ## Packages
 
 ```
-npm install -g typescript@next
-npm install axios
+npm i -g typescript@next
+npm i axios
+npm i @material-ui/core
+npm i @material-ui/core@next
+npm i @material-ui/styled-engine
 ```
 
 ## Launch the website
@@ -40,3 +43,6 @@ Run package locally:
 ```
 npx serve
 ```
+
+CSS Templates:
+https://material-ui.com/store/previews/paperbase/

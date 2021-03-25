@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import json
 import configparser
 from services.bank_account_services import BankAccountServices
@@ -11,6 +12,7 @@ bankAccountSvc = BankAccountServices(config)
 savingsSvc = SavingsServices(config)
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/bank-accounts', methods=['GET'])
 def get_banks():

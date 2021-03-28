@@ -6,6 +6,6 @@
 - Start the server: `npm run start` 
 - Views are on: `localhost:3000`
 
-## License
+## Theme & Template
 
-- Theme & Template Licensed under MIT (https://github.com/devias-io/react-material-dashboard/blob/master/LICENSE.md)
+- https://github.com/devias-io/react-material-dashboard

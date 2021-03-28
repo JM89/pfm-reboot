@@ -11,6 +11,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const useStyles = makeStyles({
     table: {
@@ -37,6 +39,7 @@ const formReducer = function (state: any, event: any) {
 function Savings() {
     const [savings, setSavings] = useState<any[]>([])
     const [bankAccounts, setBankAccounts] = useState<any[]>([])
+    const [transfer_date, setTransferDate] = useState<any>()
 
     const [formData, setFormData] = useReducer(formReducer, {});
     const [submitting, setSubmitting] = useState<boolean>(false);
@@ -46,7 +49,7 @@ function Savings() {
 
         axios.post("http://127.0.0.1:5000/savings", {
             amount: formData['amount'],
-            transfer_date: formData['transfer_date'],
+            transfer_date: transfer_date,
             currency: formData['currency'],
             src_account: formData['src_account'],
             dest_account: formData['dest_account']
@@ -123,7 +126,7 @@ function Savings() {
                     </label>
                     <label>
                         <p>Transfer Date</p>
-                        <input name="transfer_date" onChange={handleChange} value={formData.transfer_date || ''} />
+                        <DatePicker selected={transfer_date} onChange={date => setTransferDate(date)} />
                     </label>
                     <label>
                         <p>Amount</p>
@@ -132,8 +135,8 @@ function Savings() {
                     <label>
                         <p>Currency:</p>
                         <select name="currency" onChange={handleChange} >
+                            <option value="">--Please choose an option--</option>
                             <option value="GBP">GBP</option>
-                            <option value="EUR">EUR</option>
                         </select>
                     </label>
                 </fieldset>

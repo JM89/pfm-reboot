@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Box,
@@ -12,42 +11,50 @@ import {
   TablePagination,
   TableRow
 } from '@material-ui/core';
+import axios from 'axios';
 
-const SavingsListResults = ({ customers, ...rest }) => {
-  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
+const SavingsListResults = ({ ...rest }) => {
+  const [selectedSavingsEntries, setselectedSavingsEntries] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [savings, setSavings] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://127.0.0.1:5000/savings')
+      .then((response) => setSavings(response.data));
+  }, []);
 
   const handleSelectAll = (event) => {
-    let newSelectedCustomerIds;
+    let newselectedSavingsEntries;
 
     if (event.target.checked) {
-      newSelectedCustomerIds = customers.map((customer) => customer.id);
+      newselectedSavingsEntries = savings.map((customer) => customer.id);
     } else {
-      newSelectedCustomerIds = [];
+      newselectedSavingsEntries = [];
     }
 
-    setSelectedCustomerIds(newSelectedCustomerIds);
+    setselectedSavingsEntries(newselectedSavingsEntries);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedCustomerIds.indexOf(id);
-    let newSelectedCustomerIds = [];
+    const selectedIndex = selectedSavingsEntries.indexOf(id);
+    let newselectedSavingsEntries = [];
 
     if (selectedIndex === -1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds, id);
+      newselectedSavingsEntries = newselectedSavingsEntries.concat(selectedSavingsEntries, id);
     } else if (selectedIndex === 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(1));
-    } else if (selectedIndex === selectedCustomerIds.length - 1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(0, -1));
+      newselectedSavingsEntries = newselectedSavingsEntries.concat(selectedSavingsEntries.slice(1));
+    } else if (selectedIndex === selectedSavingsEntries.length - 1) {
+      newselectedSavingsEntries = newselectedSavingsEntries.concat(selectedSavingsEntries.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(
-        selectedCustomerIds.slice(0, selectedIndex),
-        selectedCustomerIds.slice(selectedIndex + 1)
+      newselectedSavingsEntries = newselectedSavingsEntries.concat(
+        selectedSavingsEntries.slice(0, selectedIndex),
+        selectedSavingsEntries.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedCustomerIds(newSelectedCustomerIds);
+    setselectedSavingsEntries(newselectedSavingsEntries);
   };
 
   const handleLimitChange = (event) => {
@@ -67,11 +74,11 @@ const SavingsListResults = ({ customers, ...rest }) => {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedCustomerIds.length === customers.length}
+                    checked={selectedSavingsEntries.length === savings.length}
                     color="primary"
                     indeterminate={
-                      selectedCustomerIds.length > 0
-                      && selectedCustomerIds.length < customers.length
+                      selectedSavingsEntries.length > 0
+                      && selectedSavingsEntries.length < savings.length
                     }
                     onChange={handleSelectAll}
                   />
@@ -84,15 +91,15 @@ const SavingsListResults = ({ customers, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.slice(0, limit).map((row) => (
+              {savings.slice(0, limit).map((row) => (
                 <TableRow
                   hover
                   key={row.id}
-                  selected={selectedCustomerIds.indexOf(row.id) !== -1}
+                  selected={selectedSavingsEntries.indexOf(row.id) !== -1}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedCustomerIds.indexOf(row.id) !== -1}
+                      checked={selectedSavingsEntries.indexOf(row.id) !== -1}
                       onChange={(event) => handleSelectOne(event, row.id)}
                       value="true"
                     />
@@ -100,8 +107,8 @@ const SavingsListResults = ({ customers, ...rest }) => {
                   <TableCell>{row.transfer_date}</TableCell>
                   <TableCell>{row.amount}</TableCell>
                   <TableCell>{row.currency}</TableCell>
-                  <TableCell>{row.src_account}</TableCell>
-                  <TableCell>{row.dest_account}</TableCell>
+                  <TableCell>{row.src_account.name ? `${row.src_account.name} (${row.src_account.description})` : row.src_account.code}</TableCell>
+                  <TableCell>{row.dest_account.name ? `${row.dest_account.name} (${row.dest_account.description})` : row.dest_account.code}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -110,7 +117,7 @@ const SavingsListResults = ({ customers, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={customers.length}
+        count={savings.length}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -122,7 +129,6 @@ const SavingsListResults = ({ customers, ...rest }) => {
 };
 
 SavingsListResults.propTypes = {
-  customers: PropTypes.array.isRequired
 };
 
 export default SavingsListResults;

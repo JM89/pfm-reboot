@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Box,
@@ -11,10 +10,23 @@ import {
   TablePagination,
   TableRow
 } from '@material-ui/core';
+import axios from 'axios';
 
-const BankAccountListResults = ({ customers, ...rest }) => {
+const BankAccountListResults = ({ ...rest }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [bankAccounts, setBankAccounts] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://127.0.0.1:5000/bank-accounts')
+      .then((response) => setBankAccounts(Object.entries(response.data).map(([key, value]) => ({
+        code: key,
+        name: value.name,
+        description: value.description,
+        savings_pot: value.savings_pot
+      }))));
+  }, []);
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -40,22 +52,28 @@ const BankAccountListResults = ({ customers, ...rest }) => {
                 <TableCell>
                   Description
                 </TableCell>
+                <TableCell>
+                  Savings Pot
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.slice(0, limit).map((customer) => (
+              {bankAccounts.slice(0, limit).map((bankAccount) => (
                 <TableRow
                   hover
-                  key={customer.id}
+                  key={bankAccount.id}
                 >
                   <TableCell>
-                    {customer.code}
+                    {bankAccount.code}
                   </TableCell>
                   <TableCell>
-                    {customer.name}
+                    {bankAccount.name}
                   </TableCell>
                   <TableCell>
-                    {customer.description}
+                    {bankAccount.description}
+                  </TableCell>
+                  <TableCell>
+                    {bankAccount.savings_pot}
                   </TableCell>
                 </TableRow>
               ))}
@@ -65,7 +83,7 @@ const BankAccountListResults = ({ customers, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={customers.length}
+        count={bankAccounts.length}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -77,7 +95,6 @@ const BankAccountListResults = ({ customers, ...rest }) => {
 };
 
 BankAccountListResults.propTypes = {
-  customers: PropTypes.array.isRequired
 };
 
 export default BankAccountListResults;

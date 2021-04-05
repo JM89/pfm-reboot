@@ -2,7 +2,6 @@ import { Helmet } from 'react-helmet';
 import { Box, Container } from '@material-ui/core';
 import BankAccountListResults from 'src/components/bankaccounts/BankAccountListResults';
 import BankAccountListToolbar from 'src/components/bankaccounts/BankAccountListToolbar';
-import bankaccounts from 'src/__mocks__/bankaccounts';
 
 const BankAccountList = () => (
   <>
@@ -19,7 +18,7 @@ const BankAccountList = () => (
       <Container maxWidth={false}>
         <BankAccountListToolbar />
         <Box sx={{ pt: 3 }}>
-          <BankAccountListResults customers={bankaccounts} />
+          <BankAccountListResults />
         </Box>
       </Container>
     </Box>

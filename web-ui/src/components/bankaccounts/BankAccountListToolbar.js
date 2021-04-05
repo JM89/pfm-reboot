@@ -10,15 +10,24 @@ import {
 import { Search as SearchIcon } from 'react-feather';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
+import axios from 'axios';
 
 let code = '';
 let name = '';
 let description = '';
+let savingspot = '';
 
 function handleSubmit() {
-  console.log(code);
-  console.log(name);
-  console.log(description);
+  axios.post('http://127.0.0.1:5000/bank-accounts', {
+    code,
+    name,
+    description,
+    savings_pot: savingspot
+  }).then((response) => {
+    console.log(response);
+  }).catch((error) => {
+    console.log(error);
+  });
 }
 
 function handleChange(event) {
@@ -30,6 +39,9 @@ function handleChange(event) {
   }
   if (event.target.name === 'description') {
     description = event.target.value;
+  }
+  if (event.target.name === 'savingspot') {
+    savingspot = event.target.value;
   }
 }
 
@@ -66,6 +78,10 @@ const BankAccountListToolbar = (props) => (
                 <label htmlFor="description">
                   <p>Description</p>
                   <input id="description" name="description" onChange={handleChange} />
+                </label>
+                <label htmlFor="savingspot">
+                  <p>Savings Pot</p>
+                  <input id="savingspot" name="savingspot" onChange={handleChange} />
                 </label>
                 <br />
                 <br />

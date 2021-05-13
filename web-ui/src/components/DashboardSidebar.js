@@ -11,10 +11,9 @@ import {
   Typography
 } from '@material-ui/core';
 import {
-  // AlertCircle as AlertCircleIcon,
+  DollarSign as DollarSignIcon,
   BarChart as BarChartIcon,
-  // Lock as LockIcon,
-  Users as UsersIcon
+  CreditCard as CreditCardIcon
 } from 'react-feather';
 import NavItem from './NavItem';
 
@@ -27,16 +26,16 @@ const items = [
   {
     href: '/app/dashboard',
     icon: BarChartIcon,
-    title: 'Dashboard'
+    title: 'Dashboard (WIP)'
   },
   {
     href: '/app/bankaccounts',
-    icon: UsersIcon,
+    icon: CreditCardIcon,
     title: 'Bank Accounts'
   },
   {
     href: '/app/savings',
-    icon: UsersIcon,
+    icon: DollarSignIcon,
     title: 'Savings'
   },
   // {

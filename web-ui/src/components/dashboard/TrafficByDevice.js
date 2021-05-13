@@ -9,9 +9,10 @@ import {
   colors,
   useTheme
 } from '@material-ui/core';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-import PhoneIcon from '@material-ui/icons/Phone';
-import TabletIcon from '@material-ui/icons/Tablet';
+import WbIncandescentIcon from '@material-ui/icons/WbIncandescent';
+import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import LocalGroceryStoreIcon from '@material-ui/icons/LocalGroceryStore';
+import HomeIcon from '@material-ui/icons/Home';
 
 const TrafficByDevice = (props) => {
   const theme = useTheme();
@@ -19,18 +20,19 @@ const TrafficByDevice = (props) => {
   const data = {
     datasets: [
       {
-        data: [63, 15, 22],
+        data: [11, 15, 23, 63],
         backgroundColor: [
           colors.indigo[500],
           colors.red[600],
-          colors.orange[600]
+          colors.orange[600],
+          colors.green[600]
         ],
         borderWidth: 8,
         borderColor: colors.common.white,
         hoverBorderColor: colors.common.white
       }
     ],
-    labels: ['Desktop', 'Tablet', 'Mobile']
+    labels: ['Energy', 'Groceries', 'Leisure', 'Mortgage']
   };
 
   const options = {
@@ -57,28 +59,34 @@ const TrafficByDevice = (props) => {
 
   const devices = [
     {
-      title: 'Desktop',
-      value: 63,
-      icon: LaptopMacIcon,
+      title: 'Energy',
+      value: 11,
+      icon: WbIncandescentIcon,
       color: colors.indigo[500]
     },
     {
-      title: 'Tablet',
+      title: 'Groceries',
       value: 15,
-      icon: TabletIcon,
+      icon: LocalGroceryStoreIcon,
       color: colors.red[600]
     },
     {
-      title: 'Mobile',
-      value: 23,
-      icon: PhoneIcon,
+      title: 'Leisure',
+      value: 12,
+      icon: SportsEsportsIcon,
       color: colors.orange[600]
+    },
+    {
+      title: 'Mortgage',
+      value: 63,
+      icon: HomeIcon,
+      color: colors.green[600]
     }
   ];
 
   return (
     <Card {...props}>
-      <CardHeader title="Traffic by Device" />
+      <CardHeader title="Expense Types" />
       <Divider />
       <CardContent>
         <Box

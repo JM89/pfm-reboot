@@ -27,7 +27,7 @@ const TasksProgress = (props) => (
             gutterBottom
             variant="h6"
           >
-            TASKS PROGRESS
+            ISA Allowance (from 5th April 2021)
           </Typography>
           <Typography
             color="textPrimary"

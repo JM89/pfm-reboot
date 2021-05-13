@@ -6,7 +6,7 @@ import {
   Grid,
   Typography
 } from '@material-ui/core';
-import { green } from '@material-ui/core/colors';
+import { red } from '@material-ui/core/colors';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 
@@ -24,19 +24,19 @@ const TotalCustomers = (props) => (
             gutterBottom
             variant="h6"
           >
-            TOTAL CUSTOMERS
+            Total Expenses
           </Typography>
           <Typography
             color="textPrimary"
             variant="h3"
           >
-            1,600
+            £1,600
           </Typography>
         </Grid>
         <Grid item>
           <Avatar
             sx={{
-              backgroundColor: green[600],
+              backgroundColor: red[600],
               height: 56,
               width: 56
             }}
@@ -52,11 +52,11 @@ const TotalCustomers = (props) => (
           pt: 2
         }}
       >
-        <ArrowUpwardIcon sx={{ color: green[900] }} />
+        <ArrowUpwardIcon sx={{ color: red[900] }} />
         <Typography
           variant="body2"
           sx={{
-            color: green[900],
+            color: red[900],
             mr: 1
           }}
         >

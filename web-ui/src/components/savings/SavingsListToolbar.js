@@ -15,7 +15,7 @@ let transferdate = '';
 let srcaccount = '';
 let destaccount = '';
 
-function handleSubmit() {
+function handleSubmit(callback) {
   axios.post('http://127.0.0.1:5000/savings', {
     transfer_date: transferdate,
     amount,
@@ -24,6 +24,8 @@ function handleSubmit() {
     dest_account: destaccount
   }).then((response) => {
     console.log(response);
+    callback();
+    window.location.reload();
   }).catch((error) => {
     console.log(error);
   });
@@ -119,7 +121,7 @@ const SavingsListToolbar = (props) => {
                   <br />
                   <br />
                   <div className="actions">
-                    <Button className="submit" color="primary" variant="contained" onClick={() => { handleSubmit(); close(); }}>
+                    <Button className="submit" color="primary" variant="contained" onClick={() => { handleSubmit(close); }}>
                       Submit
                     </Button>
                     <Button className="button" onClick={() => { console.log('modal closed '); close(); }}>

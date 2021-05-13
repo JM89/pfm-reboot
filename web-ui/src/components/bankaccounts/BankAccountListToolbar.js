@@ -10,7 +10,6 @@ let code = '';
 let name = '';
 let description = '';
 let savingspot = '';
-let errorMessage = '';
 
 function handleSubmit(callback) {
   axios.post('http://127.0.0.1:5000/bank-accounts', {
@@ -21,10 +20,9 @@ function handleSubmit(callback) {
   }).then((response) => {
     console.log(response);
     callback();
+    window.location.reload();
   }).catch((error) => {
     console.log(error);
-    errorMessage = 'An error occured';
-    console.log(errorMessage);
   });
 }
 
@@ -44,7 +42,6 @@ function handleChange(event) {
 }
 
 const BankAccountListToolbar = (props) => (
-
   <Box {...props}>
     <Box
       sx={{
@@ -63,10 +60,6 @@ const BankAccountListToolbar = (props) => (
               &times;
             </button>
             <div className="header">New bank account</div>
-            <div className="errorBlock">
-              {errorMessage
-                && <h3 className="error">{errorMessage}</h3>}
-            </div>
             <div className="content">
               <form>
                 <label htmlFor="code">

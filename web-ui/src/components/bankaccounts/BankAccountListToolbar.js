@@ -10,8 +10,9 @@ let code = '';
 let name = '';
 let description = '';
 let savingspot = '';
+let errorMessage = '';
 
-function handleSubmit() {
+function handleSubmit(callback) {
   axios.post('http://127.0.0.1:5000/bank-accounts', {
     code,
     name,
@@ -19,8 +20,11 @@ function handleSubmit() {
     savings_pot: savingspot
   }).then((response) => {
     console.log(response);
+    callback();
   }).catch((error) => {
     console.log(error);
+    errorMessage = 'An error occured';
+    console.log(errorMessage);
   });
 }
 
@@ -59,6 +63,10 @@ const BankAccountListToolbar = (props) => (
               &times;
             </button>
             <div className="header">New bank account</div>
+            <div className="errorBlock">
+              {errorMessage
+                && <h3 className="error">{errorMessage}</h3>}
+            </div>
             <div className="content">
               <form>
                 <label htmlFor="code">
@@ -80,7 +88,7 @@ const BankAccountListToolbar = (props) => (
                 <br />
                 <br />
                 <div className="actions">
-                  <Button className="submit" color="primary" variant="contained" onClick={() => { handleSubmit(); close(); }}>
+                  <Button className="submit" color="primary" variant="contained" onClick={() => { handleSubmit(close); }}>
                     Submit
                   </Button>
                   <Button className="button" onClick={() => { console.log('modal closed '); close(); }}>

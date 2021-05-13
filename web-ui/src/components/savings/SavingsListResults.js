@@ -3,7 +3,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Box,
   Card,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -14,7 +13,6 @@ import {
 import axios from 'axios';
 
 const SavingsListResults = ({ ...rest }) => {
-  const [selectedSavingsEntries, setselectedSavingsEntries] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [savings, setSavings] = useState([]);
@@ -24,38 +22,6 @@ const SavingsListResults = ({ ...rest }) => {
       .get('http://127.0.0.1:5000/savings')
       .then((response) => setSavings(response.data));
   }, []);
-
-  const handleSelectAll = (event) => {
-    let newselectedSavingsEntries;
-
-    if (event.target.checked) {
-      newselectedSavingsEntries = savings.map((customer) => customer.id);
-    } else {
-      newselectedSavingsEntries = [];
-    }
-
-    setselectedSavingsEntries(newselectedSavingsEntries);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedSavingsEntries.indexOf(id);
-    let newselectedSavingsEntries = [];
-
-    if (selectedIndex === -1) {
-      newselectedSavingsEntries = newselectedSavingsEntries.concat(selectedSavingsEntries, id);
-    } else if (selectedIndex === 0) {
-      newselectedSavingsEntries = newselectedSavingsEntries.concat(selectedSavingsEntries.slice(1));
-    } else if (selectedIndex === selectedSavingsEntries.length - 1) {
-      newselectedSavingsEntries = newselectedSavingsEntries.concat(selectedSavingsEntries.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newselectedSavingsEntries = newselectedSavingsEntries.concat(
-        selectedSavingsEntries.slice(0, selectedIndex),
-        selectedSavingsEntries.slice(selectedIndex + 1)
-      );
-    }
-
-    setselectedSavingsEntries(newselectedSavingsEntries);
-  };
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -72,17 +38,6 @@ const SavingsListResults = ({ ...rest }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedSavingsEntries.length === savings.length}
-                    color="primary"
-                    indeterminate={
-                      selectedSavingsEntries.length > 0
-                      && selectedSavingsEntries.length < savings.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
                 <TableCell>Transfer Date</TableCell>
                 <TableCell>Amount</TableCell>
                 <TableCell>Currency</TableCell>
@@ -92,18 +47,7 @@ const SavingsListResults = ({ ...rest }) => {
             </TableHead>
             <TableBody>
               {savings.slice(0, limit).map((row) => (
-                <TableRow
-                  hover
-                  key={row.id}
-                  selected={selectedSavingsEntries.indexOf(row.id) !== -1}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedSavingsEntries.indexOf(row.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, row.id)}
-                      value="true"
-                    />
-                  </TableCell>
+                <TableRow key={row.id}>
                   <TableCell>{row.transfer_date}</TableCell>
                   <TableCell>{row.amount}</TableCell>
                   <TableCell>{row.currency}</TableCell>

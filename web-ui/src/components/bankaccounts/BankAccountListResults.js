@@ -61,7 +61,7 @@ const BankAccountListResults = ({ ...rest }) => {
               {bankAccounts.slice(0, limit).map((bankAccount) => (
                 <TableRow
                   hover
-                  key={bankAccount.id}
+                  key={bankAccount.code}
                 >
                   <TableCell>
                     {bankAccount.code}

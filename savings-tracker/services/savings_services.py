@@ -35,18 +35,28 @@ class SavingsServices():
         return savings
 
     def create_savings(self, new_savings):
-        conn = pyodbc.connect(self.DB_CONNECTION_STRING)
+        conn = pyodbc.connect(self.DB_CONNECTION_STRING, autocommit=False)
         cursor = conn.cursor()
         cursor.execute("INSERT INTO dbo.[Savings] ([TransferDate],[Amount],[Currency],[SrcBankAccount],[DestBankAccount]) VALUES (?,?,?,?,?)",
                        new_savings["transfer_date"], new_savings["amount"], new_savings["currency"], new_savings["src_account"],new_savings["dest_account"] )
+        cursor.execute(
+            "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot - ? WHERE Code=?", new_savings["amount"] ,new_savings["src_account"])
+        cursor.execute(
+            "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot + ? WHERE Code=?", new_savings["amount"], new_savings["dest_account"])
         conn.commit()
-
         return True
 
     def delete_savings(self, id):
-
         conn = pyodbc.connect(self.DB_CONNECTION_STRING)
         cursor = conn.cursor()
-        rows_deleted = cursor.execute("DELETE FROM dbo.[Savings] WHERE Id = ?", id).rowcount
-        conn.commit()
-        return rows_deleted > 0
+        cursor.execute('SELECT SrcBankAccount, DestBankAccount, Amount FROM dbo.[Savings] WHERE Id = ?', id)
+        savings = cursor.fetchone()
+        if savings:
+            cursor.execute(
+                "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot + ? WHERE Code=?", savings[2], savings[0])
+            cursor.execute(
+                "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot - ? WHERE Code=?", savings[2], savings[1])
+            rows_deleted = cursor.execute("DELETE FROM dbo.[Savings] WHERE Id = ?", id).rowcount
+            conn.commit()
+            return rows_deleted > 0
+        return False

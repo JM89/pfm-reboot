@@ -14,7 +14,8 @@ class BankAccountServices():
         for row in cursor:
             banks[row[0]] = {
                 "name": row[1],
-                "description": row[2]
+                "description": row[2],
+                "savings_pot": str(row[3])
             }
         return banks
 
@@ -28,7 +29,7 @@ class BankAccountServices():
         if count > 0:
             return False
 
-        cursor.execute("INSERT INTO dbo.[BankAccounts] (Code,[Name],[Description]) VALUES (?,?,?)",
-                               new_bank["code"], new_bank["name"], new_bank["description"])
+        cursor.execute("INSERT INTO dbo.[BankAccounts] (Code,[Name],[Description],[SavingsPot]) VALUES (?,?,?,?)",
+                               new_bank["code"], new_bank["name"], new_bank["description"], new_bank["savings_pot"])
         conn.commit()
         return True

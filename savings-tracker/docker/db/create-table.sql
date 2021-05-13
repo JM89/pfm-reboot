@@ -6,6 +6,7 @@ BEGIN
 		Description NVARCHAR(255) NOT NULL
 		PRIMARY KEY (Code)
 	);
+	ALTER TABLE dbo.BankAccounts ADD SavingsPot decimal(10,2) not null DEFAULT 0;
 END
 
 IF NOT EXISTS(SELECT 1 FROM Savings.sys.tables where NAME = 'Savings' )

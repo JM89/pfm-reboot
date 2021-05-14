@@ -9,5 +9,5 @@ List of services:
 ## Getting Started
 
 ```
-docker-compose up
+docker-compose up --build
 ```

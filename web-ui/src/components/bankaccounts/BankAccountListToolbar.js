@@ -5,6 +5,10 @@ import {
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import axios from 'axios';
+import adapter from 'axios/lib/adapters/http';
+import config from '../../config/default.json';
+
+const savingsTrackerApi = config.savingsTrackerUrl;
 
 let code = '';
 let name = '';
@@ -12,12 +16,12 @@ let description = '';
 let savingspot = '';
 
 function handleSubmit(callback) {
-  axios.post('http://127.0.0.1:5000/bank-accounts', {
+  axios.post(`${savingsTrackerApi}/bank-accounts`, {
     code,
     name,
     description,
     savings_pot: savingspot
-  }).then((response) => {
+  }, { adapter }).then((response) => {
     console.log(response);
     callback();
     window.location.reload();

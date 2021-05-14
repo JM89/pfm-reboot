@@ -7,7 +7,11 @@ import 'reactjs-popup/dist/index.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
+import adapter from 'axios/lib/adapters/http';
 import { useEffect, useState } from 'react';
+import config from '../../config/default.json';
+
+const savingsTrackerApi = config.savingsTrackerUrl;
 
 let amount = 0;
 let currency = '';
@@ -16,13 +20,13 @@ let srcaccount = '';
 let destaccount = '';
 
 function handleSubmit(callback) {
-  axios.post('http://127.0.0.1:5000/savings', {
+  axios.post(`${savingsTrackerApi}/savings`, {
     transfer_date: transferdate,
     amount,
     currency,
     src_account: srcaccount,
     dest_account: destaccount
-  }).then((response) => {
+  }, { adapter }).then((response) => {
     console.log(response);
     callback();
     window.location.reload();
@@ -54,7 +58,7 @@ const SavingsListToolbar = (props) => {
   const [bankAccounts, setBankAccounts] = useState([]);
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:5000/bank-accounts')
+      .get(`${savingsTrackerApi}/bank-accounts`, { adapter })
       .then((response) => setBankAccounts(Object.entries(response.data).map(([key, value]) => ({
         code: key,
         name: value.name,

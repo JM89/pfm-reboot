@@ -11,6 +11,10 @@ import {
   TableRow
 } from '@material-ui/core';
 import axios from 'axios';
+import adapter from 'axios/lib/adapters/http';
+import config from '../../config/default.json';
+
+const savingsTrackerApi = config.savingsTrackerUrl;
 
 const SavingsListResults = ({ ...rest }) => {
   const [limit, setLimit] = useState(10);
@@ -19,7 +23,7 @@ const SavingsListResults = ({ ...rest }) => {
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:5000/savings')
+      .get(`${savingsTrackerApi}/savings`, { adapter })
       .then((response) => setSavings(response.data));
   }, []);
 

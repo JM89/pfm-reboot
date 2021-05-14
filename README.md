@@ -5,3 +5,9 @@ Rework of the [PersonalFinanceManager](https://github.com/JM89/personalfinancema
 List of services:
 - [x] Savings Tracker API
 - [x] Reactjs Web UI
+
+## Getting Started
+
+```
+docker-compose up
+```

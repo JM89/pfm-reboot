@@ -35,22 +35,22 @@ function handleSubmit(callback) {
   });
 }
 
+function handleDateChange(date) {
+  transferdate = date;
+}
+
 function handleChange(event) {
-  if (!event.target) {
-    transferdate = event;
-  } else {
-    if (event.target.name === 'amount') {
-      amount = event.target.value;
-    }
-    if (event.target.name === 'currency') {
-      currency = event.target.value;
-    }
-    if (event.target.name === 'srcaccount') {
-      srcaccount = event.target.value;
-    }
-    if (event.target.name === 'destaccount') {
-      destaccount = event.target.value;
-    }
+  if (event.target.name === 'amount') {
+    amount = event.target.value;
+  }
+  if (event.target.name === 'currency') {
+    currency = event.target.value;
+  }
+  if (event.target.name === 'srcaccount') {
+    srcaccount = event.target.value;
+  }
+  if (event.target.name === 'destaccount') {
+    destaccount = event.target.value;
   }
 }
 
@@ -91,7 +91,7 @@ const SavingsListToolbar = (props) => {
                   <label htmlFor="srcaccount">
                     <p>Source Bank Account:</p>
                     <select id="srcaccount" name="srcaccount" onChange={handleChange}>
-                      <option value="">--Please choose an option--</option>
+                      <option value="">Choose...</option>
                       {bankAccounts.map((bankAccount) => (
                         <option value={bankAccount.code}>{bankAccount.name}</option>
                       ))}
@@ -100,7 +100,7 @@ const SavingsListToolbar = (props) => {
                   <label htmlFor="destaccount">
                     <p>Destination Bank Account:</p>
                     <select id="destaccount" name="destaccount" onChange={handleChange}>
-                      <option value="">--Please choose an option--</option>
+                      <option value="">Choose...</option>
                       {bankAccounts.map((bankAccount) => (
                         <option value={bankAccount.code}>{bankAccount.name}</option>
                       ))}
@@ -108,8 +108,10 @@ const SavingsListToolbar = (props) => {
                   </label>
                   <label htmlFor="transferdate">
                     <p>Transfer Date</p>
-                    <>{ /* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
-                    <DatePicker selected={transferdate} onChange={handleChange} />
+                    <div className="customDatePickerWidth">
+                      <>{ /* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
+                      <DatePicker selected={transferdate} dateFormat="dd/MM/yyyy" onChange={(date) => handleDateChange(date)} />
+                    </div>
                   </label>
                   <label htmlFor="amount">
                     <p>Amount</p>
@@ -118,7 +120,7 @@ const SavingsListToolbar = (props) => {
                   <label htmlFor="currency">
                     <p>Currency</p>
                     <select id="currency" name="currency" onChange={handleChange}>
-                      <option value="">--Please choose an option--</option>
+                      <option value="">Choose...</option>
                       <option value="GBP">GBP</option>
                     </select>
                   </label>

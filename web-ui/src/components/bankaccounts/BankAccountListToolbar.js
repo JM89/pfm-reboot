@@ -68,7 +68,7 @@ const BankAccountListToolbar = (props) => (
               <form>
                 <label htmlFor="code">
                   <p>Code</p>
-                  <input id="code" name="code" onChange={handleChange} />
+                  <input id="code" name="code" onChange={handleChange} maxLength="3" />
                 </label>
                 <label htmlFor="name">
                   <p>Name</p>

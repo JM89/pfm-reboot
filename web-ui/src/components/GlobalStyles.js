@@ -24,6 +24,15 @@ const useStyles = makeStyles(() => createStyles({
     '#root': {
       height: '100%',
       width: '100%'
+    },
+    select: {
+      padding: '10px 20px',
+      margin: '10px',
+      font: '400 14px Arial',
+      width: '50%'
+    },
+    '.customDatePickerWidth > div > div.react-datepicker__input-container input': {
+      width: '100%'
     }
   }
 }));

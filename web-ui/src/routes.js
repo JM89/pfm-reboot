@@ -5,7 +5,7 @@ import BankAccountList from 'src/pages/BankAccountList';
 import SavingsList from 'src/pages/SavingsList';
 import Dashboard from 'src/pages/Dashboard';
 // import Login from 'src/pages/Login';
-// import NotFound from 'src/pages/NotFound';
+import NotFound from 'src/pages/NotFound';
 
 const routes = [
   {
@@ -15,7 +15,7 @@ const routes = [
       { path: 'bankaccounts', element: <BankAccountList /> },
       { path: 'savings', element: <SavingsList /> },
       { path: 'dashboard', element: <Dashboard /> },
-      { path: '*', element: <Navigate to="/404" /> }
+      { path: '*', element: <NotFound /> }
     ]
   },
   {
@@ -24,7 +24,7 @@ const routes = [
     children: [
       // { path: 'login', element: <Login /> },
       // { path: '404', element: <NotFound /> },
-      { path: '/', element: <Navigate to="/app/dashboard" /> },
+      { path: '/', element: <Navigate to="/app/bankaccounts" /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   }

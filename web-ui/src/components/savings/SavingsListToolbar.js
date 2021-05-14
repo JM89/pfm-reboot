@@ -7,7 +7,11 @@ import 'reactjs-popup/dist/index.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
+import adapter from 'axios/lib/adapters/http';
 import { useEffect, useState } from 'react';
+import config from '../../config/default.json';
+
+const savingsTrackerApi = config.savingsTrackerUrl;
 
 let amount = 0;
 let currency = '';
@@ -16,13 +20,13 @@ let srcaccount = '';
 let destaccount = '';
 
 function handleSubmit(callback) {
-  axios.post('http://127.0.0.1:5000/savings', {
+  axios.post(`${savingsTrackerApi}/savings`, {
     transfer_date: transferdate,
     amount,
     currency,
     src_account: srcaccount,
     dest_account: destaccount
-  }).then((response) => {
+  }, { adapter }).then((response) => {
     console.log(response);
     callback();
     window.location.reload();
@@ -31,22 +35,22 @@ function handleSubmit(callback) {
   });
 }
 
+function handleDateChange(date) {
+  transferdate = date;
+}
+
 function handleChange(event) {
-  if (!event.target) {
-    transferdate = event;
-  } else {
-    if (event.target.name === 'amount') {
-      amount = event.target.value;
-    }
-    if (event.target.name === 'currency') {
-      currency = event.target.value;
-    }
-    if (event.target.name === 'srcaccount') {
-      srcaccount = event.target.value;
-    }
-    if (event.target.name === 'destaccount') {
-      destaccount = event.target.value;
-    }
+  if (event.target.name === 'amount') {
+    amount = event.target.value;
+  }
+  if (event.target.name === 'currency') {
+    currency = event.target.value;
+  }
+  if (event.target.name === 'srcaccount') {
+    srcaccount = event.target.value;
+  }
+  if (event.target.name === 'destaccount') {
+    destaccount = event.target.value;
   }
 }
 
@@ -54,7 +58,7 @@ const SavingsListToolbar = (props) => {
   const [bankAccounts, setBankAccounts] = useState([]);
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:5000/bank-accounts')
+      .get(`${savingsTrackerApi}/bank-accounts`, { adapter })
       .then((response) => setBankAccounts(Object.entries(response.data).map(([key, value]) => ({
         code: key,
         name: value.name,
@@ -87,7 +91,7 @@ const SavingsListToolbar = (props) => {
                   <label htmlFor="srcaccount">
                     <p>Source Bank Account:</p>
                     <select id="srcaccount" name="srcaccount" onChange={handleChange}>
-                      <option value="">--Please choose an option--</option>
+                      <option value="">Choose...</option>
                       {bankAccounts.map((bankAccount) => (
                         <option value={bankAccount.code}>{bankAccount.name}</option>
                       ))}
@@ -96,7 +100,7 @@ const SavingsListToolbar = (props) => {
                   <label htmlFor="destaccount">
                     <p>Destination Bank Account:</p>
                     <select id="destaccount" name="destaccount" onChange={handleChange}>
-                      <option value="">--Please choose an option--</option>
+                      <option value="">Choose...</option>
                       {bankAccounts.map((bankAccount) => (
                         <option value={bankAccount.code}>{bankAccount.name}</option>
                       ))}
@@ -104,8 +108,10 @@ const SavingsListToolbar = (props) => {
                   </label>
                   <label htmlFor="transferdate">
                     <p>Transfer Date</p>
-                    <>{ /* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
-                    <DatePicker selected={transferdate} onChange={handleChange} />
+                    <div className="customDatePickerWidth">
+                      <>{ /* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
+                      <DatePicker selected={transferdate} dateFormat="dd/MM/yyyy" onChange={(date) => handleDateChange(date)} />
+                    </div>
                   </label>
                   <label htmlFor="amount">
                     <p>Amount</p>
@@ -114,7 +120,7 @@ const SavingsListToolbar = (props) => {
                   <label htmlFor="currency">
                     <p>Currency</p>
                     <select id="currency" name="currency" onChange={handleChange}>
-                      <option value="">--Please choose an option--</option>
+                      <option value="">Choose...</option>
                       <option value="GBP">GBP</option>
                     </select>
                   </label>

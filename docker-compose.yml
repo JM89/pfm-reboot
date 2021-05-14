@@ -22,10 +22,10 @@ services:
     ports:
       - 5000:5000
 
-  web-ui:
-    build:
-      context: ./web-ui
-      dockerfile: Dockerfile
-    container_name: web-ui
-    ports:
-      - 3000:3000
+  # web-ui:
+  #   build:
+  #     context: ./web-ui
+  #     dockerfile: Dockerfile
+  #   container_name: web-ui
+  #   ports:
+  #     - 3000:3000

@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import {
   DollarSign as DollarSignIcon,
-  BarChart as BarChartIcon,
+  // BarChart as BarChartIcon,
   CreditCard as CreditCardIcon
 } from 'react-feather';
 import NavItem from './NavItem';
@@ -23,11 +23,11 @@ const user = {
 };
 
 const items = [
-  {
-    href: '/app/dashboard',
-    icon: BarChartIcon,
-    title: 'Dashboard (WIP)'
-  },
+  // {
+  //   href: '/app/dashboard',
+  //   icon: BarChartIcon,
+  //   title: 'Dashboard (WIP)'
+  // },
   {
     href: '/app/bankaccounts',
     icon: CreditCardIcon,

@@ -14,48 +14,14 @@ import config from '../../config/default.json';
 const savingsTrackerApi = config.savingsTrackerUrl;
 
 let amount = 0;
-let currency = '';
-let transferdate = '';
+let currency = 'GBP';
 let srcaccount = '';
 let destaccount = '';
 
-function handleSubmit(callback) {
-  axios.post(`${savingsTrackerApi}/savings`, {
-    transfer_date: transferdate,
-    amount,
-    currency,
-    src_account: srcaccount,
-    dest_account: destaccount
-  }, { adapter }).then((response) => {
-    console.log(response);
-    callback();
-    window.location.reload();
-  }).catch((error) => {
-    console.log(error);
-  });
-}
-
-function handleDateChange(date) {
-  transferdate = date;
-}
-
-function handleChange(event) {
-  if (event.target.name === 'amount') {
-    amount = event.target.value;
-  }
-  if (event.target.name === 'currency') {
-    currency = event.target.value;
-  }
-  if (event.target.name === 'srcaccount') {
-    srcaccount = event.target.value;
-  }
-  if (event.target.name === 'destaccount') {
-    destaccount = event.target.value;
-  }
-}
-
 const SavingsListToolbar = (props) => {
   const [bankAccounts, setBankAccounts] = useState([]);
+  const [transferDate, setTransferDate] = useState(new Date());
+
   useEffect(() => {
     axios
       .get(`${savingsTrackerApi}/bank-accounts`, { adapter })
@@ -66,6 +32,37 @@ const SavingsListToolbar = (props) => {
         savings_pot: value.savings_pot
       }))));
   }, []);
+
+  function handleSubmit(callback) {
+    axios.post(`${savingsTrackerApi}/savings`, {
+      transfer_date: transferDate,
+      amount,
+      currency,
+      src_account: srcaccount,
+      dest_account: destaccount
+    }, { adapter }).then((response) => {
+      console.log(response);
+      callback();
+      window.location.reload();
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  function handleChange(event) {
+    if (event.target.name === 'amount') {
+      amount = event.target.value;
+    }
+    if (event.target.name === 'currency') {
+      currency = event.target.value;
+    }
+    if (event.target.name === 'srcaccount') {
+      srcaccount = event.target.value;
+    }
+    if (event.target.name === 'destaccount') {
+      destaccount = event.target.value;
+    }
+  }
 
   return (
     <Box {...props}>
@@ -106,11 +103,11 @@ const SavingsListToolbar = (props) => {
                       ))}
                     </select>
                   </label>
-                  <label htmlFor="transferdate">
+                  <label htmlFor="transferDate">
                     <p>Transfer Date</p>
                     <div className="customDatePickerWidth">
                       <>{ /* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
-                      <DatePicker selected={transferdate} dateFormat="dd/MM/yyyy" onChange={(date) => handleDateChange(date)} />
+                      <DatePicker selected={transferDate} dateFormat="dd/MM/yyyy" onChange={(date) => setTransferDate(date)} />
                     </div>
                   </label>
                   <label htmlFor="amount">
@@ -121,7 +118,7 @@ const SavingsListToolbar = (props) => {
                     <p>Currency</p>
                     <select id="currency" name="currency" onChange={handleChange}>
                       <option value="">Choose...</option>
-                      <option value="GBP">GBP</option>
+                      <option value="GBP" selected="selected">GBP</option>
                     </select>
                   </label>
                   <br />

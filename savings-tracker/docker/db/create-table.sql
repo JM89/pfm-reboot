@@ -20,4 +20,5 @@ BEGIN
 		DestBankAccount VARCHAR(3) NOT NULL,
 		PRIMARY KEY (Id)
 	);
+	ALTER TABLE dbo.Savings ADD TaxYearInfo VARCHAR(20) NOT NULL DEFAULT 'Tax Year 2021/2022';
 END

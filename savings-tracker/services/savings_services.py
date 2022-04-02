@@ -1,9 +1,10 @@
 import pyodbc
 import datetime
 
-class SavingsServices():
 
+class SavingsServices():
     DB_CONNECTION_STRING = ""
+
     def __init__(self, config):
         self.DB_CONNECTION_STRING = config['DEFAULT']["DbConnectionString"]
 
@@ -30,6 +31,7 @@ class SavingsServices():
                 "currency": row[3],
                 "src_account": src_account,
                 "dest_account": dest_account,
+                "tax_year_info": row[6],
             })
 
         return savings
@@ -37,12 +39,19 @@ class SavingsServices():
     def create_savings(self, new_savings):
         conn = pyodbc.connect(self.DB_CONNECTION_STRING, autocommit=False)
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO dbo.[Savings] ([TransferDate],[Amount],[Currency],[SrcBankAccount],[DestBankAccount]) VALUES (?,?,?,?,?)",
-                       new_savings["transfer_date"], new_savings["amount"], new_savings["currency"], new_savings["src_account"],new_savings["dest_account"] )
+
+        uk_tax_year_info = self.retrieve_tax_year_info(new_savings["transfer_date"])
+
         cursor.execute(
-            "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot - ? WHERE Code=?", new_savings["amount"] ,new_savings["src_account"])
+            "INSERT INTO dbo.[Savings] ([TransferDate],[Amount],[Currency],[SrcBankAccount],[DestBankAccount],[TaxYearInfo]) VALUES (?,?,?,?,?,?)",
+            new_savings["transfer_date"], new_savings["amount"], new_savings["currency"], new_savings["src_account"],
+            new_savings["dest_account"], uk_tax_year_info)
         cursor.execute(
-            "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot + ? WHERE Code=?", new_savings["amount"], new_savings["dest_account"])
+            "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot - ? WHERE Code=?", new_savings["amount"],
+            new_savings["src_account"])
+        cursor.execute(
+            "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot + ? WHERE Code=?", new_savings["amount"],
+            new_savings["dest_account"])
         conn.commit()
         return True
 
@@ -60,3 +69,13 @@ class SavingsServices():
             conn.commit()
             return rows_deleted > 0
         return False
+
+    def retrieve_tax_year_info(self, input_transfer_date):
+        transfer_date = datetime.datetime.strptime(input_transfer_date.strip('Z'), '%Y-%m-%dT%H:%M:%S.%f')
+        uk_tax_year_cut_off_date = datetime.datetime.strptime(str(transfer_date.year) + '-04-06', "%Y-%m-%d")
+        uk_tax_year_info = "Tax Year"
+        if transfer_date < uk_tax_year_cut_off_date:
+            uk_tax_year_info = f'{uk_tax_year_info} {str(transfer_date.year - 1)}/{str(transfer_date.year)}'
+        else:
+            uk_tax_year_info = f'{uk_tax_year_info} {str(transfer_date.year)}/{str(transfer_date.year + 1)}'
+        return uk_tax_year_info

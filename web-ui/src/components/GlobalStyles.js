@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => createStyles({
       width: '50%'
     },
     '.customDatePickerWidth > div > div.react-datepicker__input-container input': {
-      width: '100%'
+      width: '50%'
     }
   }
 }));

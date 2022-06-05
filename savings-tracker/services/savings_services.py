@@ -1,81 +1,46 @@
-import pyodbc
 import datetime
 from contracts.savings_filter_request import SavingsFilterRequest
+from repositories.savings_repository import SavingsRepository
+from entities.savings_entity import SavingsEntity
 
 
-class SavingsServices():
-    DB_CONNECTION_STRING = ""
+class SavingsServices:
 
     def __init__(self, config):
-        self.DB_CONNECTION_STRING = config['DEFAULT']["DbConnectionString"]
+        self.savings_repository = SavingsRepository(config)
 
     def get_savings(self, filters: SavingsFilterRequest, banks=None):
-        sql = "SELECT * FROM dbo.Savings WHERE 1=1"
-        if filters.getDestination()!='':
-            sql += " AND DestBankAccount='%s'" % filters.getDestination()
-        if filters.getSearchFromDate()!='':
-            sql += " AND TransferDate >= '%s'" % filters.getSearchFromDate()
+        entities = self.savings_repository.get_savings(filters.Destination, filters.SearchFromDate)
 
         savings = []
-
-        conn = pyodbc.connect(self.DB_CONNECTION_STRING)
-        cursor = conn.cursor()
-        cursor.execute(sql)
-
-        for row in cursor:
-            src_account = {"code": row[4]}
-            if banks and row[4] in banks:
-                src_account["name"] = banks[row[4]]["name"]
-                src_account["description"] = banks[row[4]]["description"]
-            dest_account = {"code": row[5]}
-            if banks and row[5] in banks:
-                dest_account["name"] = banks[row[5]]["name"]
-                dest_account["description"] = banks[row[5]]["description"]
+        for entity in entities:
+            src_account = {"code": entity.SrcBankAccount}
+            if banks and entity.SrcBankAccount in banks:
+                src_account["name"] = banks[entity.SrcBankAccount]["name"]
+                src_account["description"] = banks[entity.SrcBankAccount]["description"]
+            dest_account = {"code": entity.DestBankAccount}
+            if banks and entity.DestBankAccount in banks:
+                dest_account["name"] = banks[entity.DestBankAccount]["name"]
+                dest_account["description"] = banks[entity.DestBankAccount]["description"]
             savings.append({
-                "id": row[0],
-                "transfer_date": datetime.datetime.strftime(row[1], "%Y-%m-%d"),
-                "amount": str(row[2]),
-                "currency": row[3],
+                "id": entity.Id,
+                "transfer_date": datetime.datetime.strftime(entity.TransferDate, "%Y-%m-%d"),
+                "amount": str(entity.Amount),
+                "currency": entity.Currency,
                 "src_account": src_account,
                 "dest_account": dest_account,
-                "tax_year_info": row[6],
+                "tax_year_info": entity.TaxYearInfo,
             })
 
         return savings
 
     def create_savings(self, new_savings):
-        conn = pyodbc.connect(self.DB_CONNECTION_STRING, autocommit=False)
-        cursor = conn.cursor()
-
-        uk_tax_year_info = self.retrieve_tax_year_info(new_savings["transfer_date"])
-
-        cursor.execute(
-            "INSERT INTO dbo.[Savings] ([TransferDate],[Amount],[Currency],[SrcBankAccount],[DestBankAccount],[TaxYearInfo]) VALUES (?,?,?,?,?,?)",
-            new_savings["transfer_date"], new_savings["amount"], new_savings["currency"], new_savings["src_account"],
-            new_savings["dest_account"], uk_tax_year_info)
-        cursor.execute(
-            "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot - ? WHERE Code=?", new_savings["amount"],
-            new_savings["src_account"])
-        cursor.execute(
-            "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot + ? WHERE Code=?", new_savings["amount"],
-            new_savings["dest_account"])
-        conn.commit()
-        return True
+        new_savings["uk_tax_year_info"] = self.retrieve_tax_year_info(new_savings["transfer_date"])
+        entity = SavingsEntity(new_savings)
+        return self.savings_repository.create_savings(entity)
 
     def delete_savings(self, id):
-        conn = pyodbc.connect(self.DB_CONNECTION_STRING)
-        cursor = conn.cursor()
-        cursor.execute('SELECT SrcBankAccount, DestBankAccount, Amount FROM dbo.[Savings] WHERE Id = ?', id)
-        savings = cursor.fetchone()
-        if savings:
-            cursor.execute(
-                "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot + ? WHERE Code=?", savings[2], savings[0])
-            cursor.execute(
-                "UPDATE dbo.[BankAccounts] SET SavingsPot = SavingsPot - ? WHERE Code=?", savings[2], savings[1])
-            rows_deleted = cursor.execute("DELETE FROM dbo.[Savings] WHERE Id = ?", id).rowcount
-            conn.commit()
-            return rows_deleted > 0
-        return False
+        return self.savings_repository.delete_savings(id)
 
     def retrieve_tax_year_info(self, input_transfer_date):
         transfer_date = datetime.datetime.strptime(input_transfer_date.strip('Z'), '%Y-%m-%dT%H:%M:%S.%f')

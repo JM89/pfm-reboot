@@ -1,35 +1,26 @@
 import pyodbc
+from repositories.bank_account_repository import BankAccountRepository
+from entities.bank_account_entity import BankAccountEntity
 
-class BankAccountServices():
 
-    DB_CONNECTION_STRING = ""
+class BankAccountServices:
+
     def __init__(self, config):
-        self.DB_CONNECTION_STRING = config['DEFAULT']["DbConnectionString"]
+        self.bank_account_repository = BankAccountRepository(config)
 
     def get_all_banks(self):
-        conn = pyodbc.connect(self.DB_CONNECTION_STRING)
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM dbo.BankAccounts')
+        entities = self.bank_account_repository.get_all_banks()
         banks = {}
-        for row in cursor:
-            banks[row[0]] = {
-                "name": row[1],
-                "description": row[2],
-                "savings_pot": str(row[3])
+        for entity in entities:
+            banks[entity.Code] = {
+                "name": entity.Name,
+                "description": entity.Description,
+                "savings_pot": str(entity.SavingsPot)
             }
         return banks
 
     def create_bank(self, new_bank):
-
-        conn = pyodbc.connect(self.DB_CONNECTION_STRING)
-        cursor = conn.cursor()
-
-        cursor.execute('SELECT count(*) FROM dbo.BankAccounts where Code=?', new_bank["code"])
-        count = cursor.fetchone()[0]
-        if count > 0:
+        if self.bank_account_repository.check_if_exists(new_bank["code"]):
             return False
-
-        cursor.execute("INSERT INTO dbo.[BankAccounts] (Code,[Name],[Description],[SavingsPot]) VALUES (?,?,?,?)",
-                               new_bank["code"], new_bank["name"], new_bank["description"], new_bank["savings_pot"])
-        conn.commit()
-        return True
+        entity = BankAccountEntity(new_bank)
+        return self.bank_account_repository.create_bank(entity)

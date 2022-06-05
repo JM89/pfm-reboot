@@ -4,6 +4,7 @@ import json
 import configparser
 from services.bank_account_services import BankAccountServices
 from services.savings_services import SavingsServices
+from contracts.savings_filter_request import SavingsFilterRequest
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -28,8 +29,11 @@ def create_bank():
 
 @app.route('/savings', methods=['GET'])
 def get_savings():
+    filters = SavingsFilterRequest()
+    filters.setDestination(request.args.get('destination',''))
+    filters.setSearchFromDate(request.args.get('searchFromDate',''))
     banks = bankAccountSvc.get_all_banks()
-    savings = savingsSvc.get_savings(banks)
+    savings = savingsSvc.get_savings(filters, banks)
     return jsonify(savings)
 
 @app.route('/savings', methods=['POST'])

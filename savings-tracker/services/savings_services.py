@@ -1,5 +1,6 @@
 import pyodbc
 import datetime
+from contracts.savings_filter_request import SavingsFilterRequest
 
 
 class SavingsServices():
@@ -8,12 +9,18 @@ class SavingsServices():
     def __init__(self, config):
         self.DB_CONNECTION_STRING = config['DEFAULT']["DbConnectionString"]
 
-    def get_savings(self, banks=None):
+    def get_savings(self, filters: SavingsFilterRequest, banks=None):
+        sql = "SELECT * FROM dbo.Savings WHERE 1=1"
+        if filters.getDestination()!='':
+            sql += " AND DestBankAccount='%s'" % filters.getDestination()
+        if filters.getSearchFromDate()!='':
+            sql += " AND TransferDate >= '%s'" % filters.getSearchFromDate()
+
         savings = []
 
         conn = pyodbc.connect(self.DB_CONNECTION_STRING)
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM dbo.Savings')
+        cursor.execute(sql)
 
         for row in cursor:
             src_account = {"code": row[4]}

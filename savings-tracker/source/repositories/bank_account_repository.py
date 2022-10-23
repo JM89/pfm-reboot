@@ -1,6 +1,6 @@
 import pyodbc
-from entities.bank_account_entity import BankAccountEntity
-from core.generic_logger import get_logger
+from src.entities.bank_account_entity import BankAccountEntity
+from src.core.generic_logger import get_logger
 
 logger = get_logger("bank_account_repository")
 

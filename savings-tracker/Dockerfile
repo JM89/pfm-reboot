@@ -22,6 +22,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY config.docker.ini ./config.ini
 COPY app.py ./
-COPY services/ ./services/
+COPY app/ ./
 
-CMD [ "python", "./app.py" ]
+CMD [ "python", "./app/app.py" ]

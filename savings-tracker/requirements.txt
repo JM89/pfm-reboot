@@ -1,4 +1,4 @@
 flask
 flask_cors
-pyodbc
+pyodbc==4.0.30
 pygelf

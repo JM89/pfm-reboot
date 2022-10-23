@@ -6,6 +6,7 @@ from services.bank_account_services import BankAccountServices
 from services.savings_services import SavingsServices
 from contracts.savings_filter_request import SavingsFilterRequest
 from flask import Response
+from core.timer import Timer
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -16,13 +17,18 @@ savingsSvc = SavingsServices(config)
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
+timer = Timer()
 
 @app.route('/bank-accounts', methods=['GET'])
 def get_banks():
+    timer.start("Get all bank accounts")
     result = bankAccountSvc.get_all_banks()
     if result == None:
-        return Response("Unhandled exception occurred, check your logs", status=500, mimetype='application/json')
-    return jsonify(result)
+        response = Response("Unhandled exception occurred, check your logs", status=500, mimetype='application/json')
+    else:
+        response = jsonify(result)
+    timer.stop()
+    return response
 
 
 @app.route('/bank-accounts', methods=['POST'])

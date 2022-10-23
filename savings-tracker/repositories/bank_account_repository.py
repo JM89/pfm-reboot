@@ -3,7 +3,6 @@ from entities.bank_account_entity import BankAccountEntity
 from core.generic_logger import get_logger
 
 logger = get_logger("bank_account_repository")
-# logger.error("an error message")
 
 class BankAccountRepository:
 
@@ -23,7 +22,7 @@ class BankAccountRepository:
         return False
 
     def get_all_banks(self):
-        logger.debug("calling get_all_banks repository")
+        logger.debug("Calling get_all_banks database repository")
         entities = []
         try:
             conn = pyodbc.connect(self.DB_CONNECTION_STRING)
@@ -32,8 +31,8 @@ class BankAccountRepository:
             for row in cursor:
                 entities.append(BankAccountEntity(row))
             return entities
-        except Exception as ex:
-            logger.exception("error connecting db %s", ex)
+        except Exception:
+            logger.exception("Unhandled exception while connecting to the database", exc_info=1)
             raise
 
     def create_bank(self, entity: BankAccountEntity):

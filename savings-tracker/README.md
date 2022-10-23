@@ -30,6 +30,8 @@ You can then test the API by using the Postman collection.
 
 ## Logging
 
+To see the application logs in local, go to http://localhost/#/events. 
+
 Reference:
 - [Graylog Extended Log Format (GELF)](https://archivedocs.graylog.org/en/2.5/pages/gelf.html)
 - [pygelf package](https://github.com/keeprocking/pygelf)

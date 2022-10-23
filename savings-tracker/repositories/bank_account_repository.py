@@ -1,8 +1,11 @@
 import pyodbc
 from entities.bank_account_entity import BankAccountEntity
+from core.generic_logger import get_logger
 
+logger = get_logger("bank_account_repository")
+# logger.error("an error message")
 
-class BankAccountRepository():
+class BankAccountRepository:
 
     DB_CONNECTION_STRING = ""
 
@@ -20,13 +23,18 @@ class BankAccountRepository():
         return False
 
     def get_all_banks(self):
-        conn = pyodbc.connect(self.DB_CONNECTION_STRING)
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM dbo.BankAccounts')
+        logger.debug("calling get_all_banks repository")
         entities = []
-        for row in cursor:
-            entities.append(BankAccountEntity(row))
-        return entities
+        try:
+            conn = pyodbc.connect(self.DB_CONNECTION_STRING)
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM dbo.BankAccounts')
+            for row in cursor:
+                entities.append(BankAccountEntity(row))
+            return entities
+        except Exception as ex:
+            logger.exception("error connecting db %s", ex)
+            raise
 
     def create_bank(self, entity: BankAccountEntity):
         conn = pyodbc.connect(self.DB_CONNECTION_STRING)

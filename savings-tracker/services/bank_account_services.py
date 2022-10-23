@@ -1,6 +1,5 @@
-import pyodbc
-from repositories.bank_account_repository import BankAccountRepository
 from entities.bank_account_entity import BankAccountEntity
+from repositories.bank_account_repository import BankAccountRepository
 
 
 class BankAccountServices:
@@ -9,15 +8,18 @@ class BankAccountServices:
         self.bank_account_repository = BankAccountRepository(config)
 
     def get_all_banks(self):
-        entities = self.bank_account_repository.get_all_banks()
-        banks = {}
-        for entity in entities:
-            banks[entity.Code] = {
-                "name": entity.Name,
-                "description": entity.Description,
-                "savings_pot": str(entity.SavingsPot)
-            }
-        return banks
+        try:
+            entities = self.bank_account_repository.get_all_banks()
+            banks = {}
+            for entity in entities:
+                banks[entity.Code] = {
+                    "name": entity.Name,
+                    "description": entity.Description,
+                    "savings_pot": str(entity.SavingsPot)
+                }
+            return banks
+        except:
+            return None
 
     def create_bank(self, new_bank):
         if self.bank_account_repository.check_if_exists(new_bank["code"]):

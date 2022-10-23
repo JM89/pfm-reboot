@@ -1,5 +1,5 @@
-from entities.bank_account_entity import BankAccountEntity
-from repositories.bank_account_repository import BankAccountRepository
+from app.entities.bank_account_entity import BankAccountEntity
+from app.repositories.bank_account_repository import BankAccountRepository
 
 
 class BankAccountServices:

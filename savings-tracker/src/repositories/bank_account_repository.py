@@ -1,15 +1,14 @@
 import pyodbc
 from entities.bank_account_entity import BankAccountEntity
-from core.generic_logger import get_logger
 
-logger = get_logger("bank_account_repository")
 
 class BankAccountRepository:
 
     DB_CONNECTION_STRING = ""
 
-    def __init__(self, config):
+    def __init__(self, config, logger):
         self.DB_CONNECTION_STRING = config['DEFAULT']["DbConnectionString"]
+        self.logger = logger
 
     def check_if_exists(self, code):
         conn = pyodbc.connect(self.DB_CONNECTION_STRING)
@@ -22,7 +21,7 @@ class BankAccountRepository:
         return False
 
     def get_all_banks(self):
-        logger.debug("Calling get_all_banks database repository")
+        self.logger.debug("Calling get_all_banks database repository")
         entities = []
         try:
             conn = pyodbc.connect(self.DB_CONNECTION_STRING)
@@ -32,7 +31,7 @@ class BankAccountRepository:
                 entities.append(BankAccountEntity(row))
             return entities
         except Exception:
-            logger.exception("Unhandled exception while connecting to the database", exc_info=1)
+            self.logger.exception("Unhandled exception while connecting to the database", exc_info=1)
             raise
 
     def create_bank(self, entity: BankAccountEntity):

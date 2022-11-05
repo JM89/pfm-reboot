@@ -1,13 +1,13 @@
 import logging
-import sys
 from pygelf import GelfUdpHandler
 
-def get_logger(logger_name):
+
+def get_logger(logger_name, logger_config):
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(GelfUdpHandler(
-        host='127.0.0.1',
-        port=12201,
+        host=logger_config['LogAgentHost'],
+        port=int(logger_config['LogAgentPort']),
         _app_version="1.0.0",
         _app_name='savings-tracker',
         _env='local',

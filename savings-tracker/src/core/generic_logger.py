@@ -13,7 +13,10 @@ def get_logger(logger_name):
         _env='local',
         additional_env_fields={'username': 'USERNAME'} # other environment variable on your machine
     ))
-    logger.propagate = False
+    consoleHandler = logging.StreamHandler()
+    consoleHandler.setLevel(logging.WARNING)
+    logger.addHandler(consoleHandler)
 
+    logger.propagate = False
 
     return logger

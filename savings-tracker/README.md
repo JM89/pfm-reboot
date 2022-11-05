@@ -35,3 +35,9 @@ To see the application logs in local, go to http://localhost/#/events.
 Reference:
 - [Graylog Extended Log Format (GELF)](https://archivedocs.graylog.org/en/2.5/pages/gelf.html)
 - [pygelf package](https://github.com/keeprocking/pygelf)
+
+## Debug docker image
+
+```commandline
+docker run -it --entrypoint=/bin/bash local-testing:latest -i
+```

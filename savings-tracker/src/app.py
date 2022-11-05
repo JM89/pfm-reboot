@@ -9,7 +9,7 @@ from flask import Response
 from core.timer import Timer
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('../configs/config.ini')
 
 bankAccountSvc = BankAccountServices(config)
 savingsSvc = SavingsServices(config)

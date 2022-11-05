@@ -1,27 +1,20 @@
-FROM python:3
+FROM python:3.8.2
 
-# install FreeTDS and dependencies
-RUN apt-get update \
- && apt-get install unixodbc -y \
- && apt-get install unixodbc-dev -y \
- && apt-get install freetds-dev -y \
- && apt-get install freetds-bin -y \
- && apt-get install tdsodbc -y \
- && apt-get install --reinstall build-essential -y
+WORKDIR /app
+RUN apt-get update -y && pip install --upgrade pip && apt-get install -y --no-install-recommends \
+    unixodbc-dev \
+    unixodbc \
+    libpq-dev
 
-# populate "ocbcinst.ini"
-RUN echo "[FreeTDS]\n\
-Description = FreeTDS unixODBC Driver\n\
-Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so\n\
-Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so" >> /etc/odbcinst.ini
+COPY requirements.txt /app/requirements.txt
 
-WORKDIR /usr/src/app
+RUN pip install -r requirements.txt
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+COPY src/ /app/src/
+COPY configs/config.docker.ini /app/configs/config.ini
 
-COPY config.docker.ini ./config.ini
-COPY app.py ./
-COPY app/ ./
+WORKDIR /app/src
 
-CMD [ "python", "./app/app.py" ]
+EXPOSE 5000
+
+CMD [ "python" , "./app.py" ]

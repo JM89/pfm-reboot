@@ -1,5 +1,5 @@
 import time
-from src.core.generic_logger import get_logger
+from core.generic_logger import get_logger
 
 logger = get_logger("timed_operations")
 

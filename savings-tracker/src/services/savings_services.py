@@ -1,7 +1,7 @@
 import datetime
-from src.contracts.savings_filter_request import SavingsFilterRequest
-from src.repositories.savings_repository import SavingsRepository
-from src.entities.savings_entity import SavingsEntity
+from contracts.savings_filter_request import SavingsFilterRequest
+from repositories.savings_repository import SavingsRepository
+from entities.savings_entity import SavingsEntity
 
 
 class SavingsServices:

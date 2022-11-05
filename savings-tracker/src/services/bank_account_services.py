@@ -1,11 +1,12 @@
-from src.entities.bank_account_entity import BankAccountEntity
-from src.repositories.bank_account_repository import BankAccountRepository
+from entities.bank_account_entity import BankAccountEntity
+from repositories.bank_account_repository import BankAccountRepository
 
 
 class BankAccountServices:
 
-    def __init__(self, config):
-        self.bank_account_repository = BankAccountRepository(config)
+    def __init__(self, config, logger):
+        self.bank_account_repository = BankAccountRepository(config, logger)
+        self.logger = logger
 
     def get_all_banks(self):
         try:

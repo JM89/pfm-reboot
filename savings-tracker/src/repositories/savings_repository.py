@@ -1,5 +1,5 @@
 import pyodbc
-from src.entities.savings_entity import SavingsEntity
+from entities.savings_entity import SavingsEntity
 
 
 class SavingsRepository:

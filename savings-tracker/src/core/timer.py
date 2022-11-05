@@ -1,16 +1,15 @@
 import time
-from src.core.generic_logger import get_logger
-
-logger = get_logger("timed_operations")
 
 
 class TimerError(Exception):
     """A custom exception used to report errors in use of Timer class"""
 
+
 class Timer:
-    def __init__(self):
+    def __init__(self, logger):
         self.operation_name = None
         self._start_time = None
+        self.logger = logger
 
     def start(self, operation_name):
         """Start a new timer"""
@@ -26,4 +25,4 @@ class Timer:
 
         elapsed_time = time.perf_counter() - self._start_time
         self._start_time = None
-        logger.info(f"{self.operation_name} completed in {elapsed_time:0.4f} seconds")
+        self.logger.info(f"{self.operation_name} completed in {elapsed_time:0.4f} seconds")

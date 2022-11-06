@@ -8,7 +8,7 @@ class BankAccountServices:
         self.bank_account_repository = BankAccountRepository(config, logger)
         self.logger = logger
 
-    def get_all_banks(self):
+    def get_all_banks(self) -> dict:
         try:
             entities = self.bank_account_repository.get_all_banks()
             banks = {}
@@ -22,8 +22,11 @@ class BankAccountServices:
         except:
             return None
 
-    def create_bank(self, new_bank):
-        if self.bank_account_repository.check_if_exists(new_bank["code"]):
+    def create_bank(self, new_bank: dict) -> bool:
+        try:
+            if self.bank_account_repository.check_if_exists(new_bank["code"]):
+                return False
+            entity = BankAccountEntity(new_bank)
+            return self.bank_account_repository.create_bank(entity)
+        except:
             return False
-        entity = BankAccountEntity(new_bank)
-        return self.bank_account_repository.create_bank(entity)

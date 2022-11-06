@@ -2,3 +2,4 @@ flask
 flask_cors
 pyodbc==4.0.30
 pygelf
+flasgger

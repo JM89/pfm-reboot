@@ -1,0 +1,48 @@
+Create savings movement.
+Credit an amount out a savings account.
+---
+definitions:
+  CreateSavingsRequest:
+    type: object
+    properties:
+      transfer_date:
+        description: Transfer date (can be in the past). A 'tax year' will be associated to your entry.
+        type: string
+        required: true
+      amount:
+        description: Amount saved.
+        type: number
+        required: true
+      currency:
+        description: Currency.
+        type: string
+        required: true
+      src_account:
+        description: Existing bank account code from where to debit the amount.
+        type: string
+        required: true
+      dest_account:
+        description: Existing bank account code from where to credit the amount.
+        type: string
+        required: true
+  CreateSavingsResponse:
+    type: object
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: '#/definitions/CreateSavingsRequest'
+      examples:
+        simple:
+          summary: Savings to make between 2 bank accounts
+          value: { "transfer_date": "2022-11-06T00:00:00.000", "amount": 4000, "currency": "GBP", "src_account": "BC", "dest_account": "BS" }
+responses:
+  200:
+    description: Confirmation or error message
+    schema:
+      $ref: '#/definitions/CreateSavingsResponse'

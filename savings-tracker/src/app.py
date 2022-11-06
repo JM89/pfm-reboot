@@ -1,73 +1,35 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-import json
-import configparser
-from services.bank_account_services import BankAccountServices
-from services.savings_services import SavingsServices
-from contracts.savings_filter_request import SavingsFilterRequest
-from flask import Response
-from core.timer import Timer
-from core.generic_logger import get_logger
+from flasgger import Swagger
+from flask import Flask
 
-config = configparser.ConfigParser()
-config.read('../configs/config.ini')
-
-logger = get_logger("app", config['LoggerConfig'])
-
-bankAccountSvc = BankAccountServices(config, logger)
-savingsSvc = SavingsServices(config)
-
-app = Flask(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
-
-timer = Timer(logger)
+from src.controllers.bank_account_api import bank_account_api
+from src.controllers.savings_api import savings_api
 
 
-@app.route('/bank-accounts', methods=['GET'])
-def get_banks():
-    timer.start("Get all bank accounts")
-    result = bankAccountSvc.get_all_banks()
-    if result is None:
-        response = Response("Unhandled exception occurred, check your logs", status=500, mimetype='application/json')
-    else:
-        response = jsonify(result)
-    timer.stop()
-    return response
+def create_app():
+    app = Flask(__name__)
 
+    app.config['SWAGGER'] = {
+        'title': 'Savings Tracker API',
+        'uiversion': 3,
+        'openapi': '3.0.3',
+        'persistAuthorization': True,
+    }
+    swagger = Swagger(app)
+    app.config.from_pyfile('app_config.py')
+    app.register_blueprint(bank_account_api, url_prefix='/bank-accounts')
+    app.register_blueprint(savings_api, url_prefix='/savings')
 
-@app.route('/bank-accounts', methods=['POST'])
-def create_bank():
-    new_bank = json.loads(request.data)
-    result = bankAccountSvc.create_bank(new_bank)
-    if result:
-        return jsonify({'message': 'Bank account created successfully', 'status': '200'})
-    return jsonify({'message': 'Bank account already exists', 'status': '400'})
-
-
-@app.route('/savings', methods=['GET'])
-def get_savings():
-    filters = SavingsFilterRequest(request.args.get('destination', ''), request.args.get('searchFromDate', ''))
-    banks = bankAccountSvc.get_all_banks()
-    savings = savingsSvc.get_savings(filters, banks)
-    return jsonify(savings)
-
-
-@app.route('/savings', methods=['POST'])
-def create_savings():
-    new_savings = json.loads(request.data)
-    result = savingsSvc.create_savings(new_savings)
-    if result:
-        return jsonify({'message': 'Savings created successfully', 'status': '200'})
-    return jsonify({'message': 'Savings could not be created', 'status': '400'})
-
-
-@app.route('/savings/<id>', methods=['DELETE'])
-def delete_savings(id):
-    result = savingsSvc.delete_savings(id)
-    if result:
-        return jsonify({'message': 'Savings has been deleted successfully', 'status': '200'})
-    return jsonify({'message': 'No Savings could be deleted', 'status': '400'})
+    return app
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser()
+    parser.add_argument('-p', '--port', default=5000, type=int, help='port to listen on')
+    args = parser.parse_args()
+    port = args.port
+
+    app = create_app()
+
+    app.run(host='0.0.0.0', port=port, debug=True)

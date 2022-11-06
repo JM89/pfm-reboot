@@ -1,8 +1,8 @@
 from flasgger import Swagger
 from flask import Flask
 
-from src.controllers.bank_account_api import bank_account_api
-from src.controllers.savings_api import savings_api
+from controllers.bank_account_api import bank_account_api
+from controllers.savings_api import savings_api
 
 
 def create_app():
@@ -15,7 +15,7 @@ def create_app():
         'persistAuthorization': True,
     }
     swagger = Swagger(app)
-    app.config.from_pyfile('app_config.py')
+    app.config.from_pyfile('config.py')
     app.register_blueprint(bank_account_api, url_prefix='/bank-accounts')
     app.register_blueprint(savings_api, url_prefix='/savings')
 

@@ -1,7 +1,7 @@
-from configs.config import get_configs, get_config_section
+from config import get_configs, get_config_section
 import json
 
-from flask import Blueprint, Response
+from flask import Blueprint
 from flask import request, jsonify
 from flasgger import swag_from
 
@@ -25,9 +25,7 @@ def get_banks():
     try:
         result = bankAccountSvc.get_all_banks()
         if result is None:
-            response = Response("Unhandled exception occurred, check your logs",
-                                status=500,
-                                mimetype='application/json')
+            response = jsonify({'message': 'Unhandled exception occurred, check your logs', 'status': '500'})
         else:
             response = jsonify(result)
     finally:

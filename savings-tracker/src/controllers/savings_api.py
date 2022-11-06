@@ -1,4 +1,4 @@
-from configs.config import get_configs
+from config import get_configs
 import json
 
 from flask import Blueprint
@@ -30,7 +30,10 @@ def get_savings():
         filters = SavingsFilterRequest(request.args.get('destination', ''), request.args.get('searchFromDate', ''))
         banks = bankAccountSvc.get_all_banks()
         savings = savingsSvc.get_savings(filters, banks)
-        return jsonify(savings)
+        if savings is None:
+            return jsonify({'message': 'Unhandled exception occurred, check your logs', 'status': '500'})
+        else:
+            return jsonify(savings)
     finally:
         timer.stop()
 

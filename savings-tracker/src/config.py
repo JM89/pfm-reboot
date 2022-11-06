@@ -1,7 +1,10 @@
 import configparser
+import os
+
+CONFIG_FILE = os.environ.get('CONFIG_FILE', 'config')
 
 config = configparser.ConfigParser()
-config.read('../configs/config.ini')
+config.read(f'{CONFIG_FILE}.ini')
 
 
 def get_configs():

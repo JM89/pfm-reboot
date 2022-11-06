@@ -1,0 +1,46 @@
+Create a bank account.
+Bank account includes sources (current account mostly) and destinations (saving bank account mostly).
+---
+definitions:
+  CreateBankAccountRequest:
+    type: object
+    properties:
+      code:
+        description: 3-char code (unique)
+        type: string
+        required: true
+      name:
+        type: string
+        required: true
+      description:
+        type: string
+        required: true
+      savings_pot:
+        description: Current balance on the saving account when the bank account is created.
+        type: number
+        required: true
+  CreateBankAccountResponse:
+    type: object
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: '#/definitions/CreateBankAccountRequest'
+      examples:
+        simple:
+          summary: Bank account to create
+          value: { "code": "BAR", "name": "Barclays", "description": "Cash ISA", "savings_pot": 0 }
+responses:
+  200:
+    description: Confirmation message
+    schema:
+      $ref: '#/definitions/CreateBankAccountResponse'
+  400:
+    description: Bank account already exists (code must be unique)
+    schema:
+      $ref: '#/definitions/CreateBankAccountResponse'

@@ -1,0 +1,43 @@
+List of savings.
+Movements made on savings account.
+---
+definitions:
+  SavingsResponse:
+    type: object
+    properties:
+      code:
+        type: object
+        properties:
+          id:
+            type: number
+          transfer_date:
+            type: string
+          amount:
+            type: number
+          currency:
+            type: string
+          src_account:
+            type: object
+            properties:
+              code:
+                type: string
+              description:
+                type: string
+              name:
+                type: string
+          dest_account:
+            type: object
+            properties:
+              code:
+                type: string
+              description:
+                type: string
+              name:
+                type: string
+          tax_year_info:
+            type: string
+responses:
+  200:
+    description: A list of savings
+    schema:
+      $ref: '#/definitions/SavingsResponse'

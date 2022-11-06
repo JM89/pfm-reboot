@@ -1,0 +1,21 @@
+List of bank accounts.
+Bank account includes sources (current account mostly) and destinations (saving bank account mostly).
+---
+definitions:
+  GetAllBankAccountsResponse:
+    type: object
+    properties:
+      code:
+        type: object
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+          savings_pot:
+            type: string
+responses:
+  200:
+    description: A list of bank accounts
+    schema:
+      $ref: '#/definitions/GetAllBankAccountsResponse'

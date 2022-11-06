@@ -1,0 +1,23 @@
+Delete savings movement.
+Debit an amount out a savings account.
+---
+definitions:
+  DeleteSavingsResponse:
+    type: object
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+parameters:
+  - name: id
+    in: path
+    description: Savings movement id to delete
+    required: true
+    schema:
+      type: number
+responses:
+  200:
+    description: Confirmation or error message
+    schema:
+      $ref: '#/definitions/DeleteSavingsResponse'

@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+
+  localstack:
+    container_name: localstack
+    build:
+      dockerfile: Dockerfile
+      context: ./localstack
+    environment:
+      - SERVICES=ssm,kms
+      - DEBUG=${DEBUG-}
+    ports:
+      - "4566:4566"

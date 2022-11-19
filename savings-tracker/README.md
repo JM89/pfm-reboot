@@ -13,7 +13,7 @@ Start a local database SQL server, with two tables for our API and a user accoun
 config.ini):
 
 ```
-docker-compose -f docker/docker-compose.yml up
+docker-compose -f docker/docker-compose.yml -f docker/docker-compose-infra.yml up
 ```
 
 Install app dependencies:
@@ -49,4 +49,10 @@ Reference:
 
 ```commandline
 docker run -it --entrypoint=/bin/bash local-testing:latest -i
+```
+
+## Local parameters
+
+```
+aws ssm describe-parameters --endpoint http://localhost:4566 --region eu-west-2
 ```

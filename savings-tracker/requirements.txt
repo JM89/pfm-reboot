@@ -3,3 +3,4 @@ flask_cors
 pyodbc==4.0.30
 pygelf
 flasgger
+boto3==1.26.13

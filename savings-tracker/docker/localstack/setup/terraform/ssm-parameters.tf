@@ -1,6 +1,7 @@
 locals {
   default_tags = {
-    "env" : var.environment
+    "env" : var.environment,
+    "app" : "savings-tracker"
   }
 }
 
@@ -34,7 +35,7 @@ resource "aws_ssm_parameter" "db_connection_string" {
 resource "aws_ssm_parameter" "db_connection_string_key" {
   name   = "/db/password"
   type   = "SecureString"
-  value  = "TBD"
+  value  = var.db_connection_string_password
   key_id = aws_kms_key.ssm_parameter_key.arn
   tags   = merge(local.default_tags, {
     "group" : "db"

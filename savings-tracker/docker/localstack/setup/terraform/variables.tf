@@ -21,3 +21,9 @@ variable "db_connection_string" {
   type        = string
   default     = "Driver={SQL Server};Server=localhost,1433;Database=Savings;UID=SavingsSvc;PWD=#{Pwd}"
 }
+
+variable "db_connection_string_password" {
+  description = "DB User Password. Will be replaced in the connection. Do not keep actual sensitive data on SC"
+  type        = string
+  default     = "340Uuxwp7Mcxo7Khy"
+}

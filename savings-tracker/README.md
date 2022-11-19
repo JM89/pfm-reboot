@@ -10,10 +10,10 @@ Python Flask API to track savings into bank accounts.
 ## Getting Started
 
 Start a local database SQL server, with two tables for our API and a user account for the app (credentials available in
-config.ini):
+tf parameter store):
 
 ```
-docker-compose -f docker/docker-compose.yml -f docker/docker-compose-infra.yml up
+docker-compose -f docker/docker-compose-db.yml -f docker/docker-compose-monitoring.yml -f docker/docker-compose-infra.yml up
 ```
 
 Install app dependencies:

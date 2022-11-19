@@ -1,13 +1,11 @@
 variable "environment" {
   description = "Target environment"
   type        = string
-  default     = "local"
 }
 
 variable "log_agent_host" {
   description = "Log agent hostname."
   type        = string
-  default     = "127.0.0.1"
 }
 
 variable "log_agent_port" {
@@ -25,5 +23,4 @@ variable "db_connection_string" {
 variable "db_connection_string_password" {
   description = "DB User Password. Will be replaced in the connection. Do not keep actual sensitive data on SC"
   type        = string
-  default     = "340Uuxwp7Mcxo7Khy"
 }

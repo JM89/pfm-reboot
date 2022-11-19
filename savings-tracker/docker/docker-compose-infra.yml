@@ -10,5 +10,6 @@ services:
     environment:
       - SERVICES=ssm,kms
       - DEBUG=${DEBUG-}
+      - TERRAFORM_ENVIRONMENT=local
     ports:
       - "4566:4566"

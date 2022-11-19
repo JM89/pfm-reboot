@@ -2,6 +2,7 @@ import configparser
 import os
 
 import boto3
+from retry import retry
 
 CONFIG_FILE = os.environ.get('CONFIG_FILE', 'config')
 
@@ -31,7 +32,10 @@ def ensure_success_code(response: dict) -> bool:
     return True
 
 
+@retry(Exception, tries=10, delay=1, backoff=2)
 def get_parameters_from_aws() -> configparser.ConfigParser:
+    print("access aws parameter store for configs")
+
     region = get_config_value("Region", "AWS")
     service_url = get_config_value("Endpoint", "AWS")
     try:

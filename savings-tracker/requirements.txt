@@ -4,3 +4,4 @@ pyodbc==4.0.30
 pygelf
 flasgger
 boto3==1.26.13
+retry==0.9.2

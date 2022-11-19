@@ -29,6 +29,18 @@ services:
     ports:
       - "12201:12201/udp"
 
+  localstack:
+    container_name: localstack
+    build:
+      dockerfile: Dockerfile
+      context: ./savings-tracker/docker/localstack
+    environment:
+      - SERVICES=ssm,kms
+      - DEBUG=${DEBUG-}
+      - TERRAFORM_ENVIRONMENT=local-docker
+    ports:
+      - "4566:4566"
+
   savings-tracker:
     build:
       context: ./savings-tracker
@@ -36,6 +48,9 @@ services:
     container_name: savings-tracker
     environment:
       - CONFIG_FILE=config.docker
+      - AWS_ACCESS_KEY_ID=xxx
+      - AWS_SECRET_ACCESS_KEY=xxx
+      - AWS_ACCESS_KEY_ID=eu-west-2
     expose:
       - 5000
     ports:

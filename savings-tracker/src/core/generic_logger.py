@@ -1,4 +1,5 @@
 import logging
+
 from pygelf import GelfUdpHandler
 
 
@@ -11,10 +12,10 @@ def get_logger(logger_name, logger_config):
         _app_version="1.0.0",
         _app_name='savings-tracker',
         _env='local',
-        additional_env_fields={'username': 'USERNAME'} # other environment variable on your machine
+        additional_env_fields={'username': 'USERNAME'}  # other environment variable on your machine
     ))
     consoleHandler = logging.StreamHandler()
-    consoleHandler.setLevel(logging.WARNING)
+    consoleHandler.setLevel(logging.INFO)
     logger.addHandler(consoleHandler)
 
     logger.propagate = False

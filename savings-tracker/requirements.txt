@@ -5,3 +5,4 @@ pygelf
 flasgger
 boto3==1.26.13
 retry==0.9.2
+wraps==0.2.0

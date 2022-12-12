@@ -1,10 +1,11 @@
-from config import get_configs, get_config_section
 import json
 
-from flask import Blueprint
-from flask import request, jsonify
 from flasgger import swag_from
+from flask import Blueprint
+from flask import request
 
+from config import get_configs, get_config_section
+from core.api_action_wrapper import api_action
 from core.generic_logger import get_logger
 from core.timer import Timer
 from services.bank_account_services import BankAccountServices
@@ -19,30 +20,23 @@ bankAccountSvc = BankAccountServices(config, logger)
 
 
 @bank_account_api.route('/', methods=['GET'])
+@api_action
 @swag_from('docs/get_banks.yml')
 def get_banks():
-    timer.start("API action: get_banks")
-    try:
-        result = bankAccountSvc.get_all_banks()
-        if result is None:
-            response = jsonify({'message': 'Unhandled exception occurred, check your logs', 'status': '500'})
-        else:
-            response = jsonify(result)
-    finally:
-        timer.stop()
-    return response
+    """Get all banks"""
+    result = bankAccountSvc.get_all_banks()
+    if result is None:
+        result = {'message': 'Unhandled exception occurred, check your logs', 'status': '500'}
+    return result
 
 
 @bank_account_api.route('/', methods=['POST'])
+@api_action
 @swag_from('docs/create_bank.yml', validation=True)
 def create_bank():
-    timer.start("API action: create_bank")
-    try:
-        new_bank = json.loads(request.data)
-        result = bankAccountSvc.create_bank(new_bank)
-        if result:
-            return jsonify({'message': 'Bank account created successfully', 'status': '200'})
-        return jsonify({'message': 'Bank account already exists', 'status': '400'})
-    finally:
-        timer.stop()
-    return response
+    """Create a bank"""
+    new_bank = json.loads(request.data)
+    result = bankAccountSvc.create_bank(new_bank)
+    if result:
+        return {'message': 'Bank account created successfully', 'status': '200'}
+    return {'message': 'Bank account already exists', 'status': '400'}

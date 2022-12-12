@@ -16,7 +16,7 @@ tf parameter store):
 docker-compose -f docker/docker-compose-db.yml -f docker/docker-compose-monitoring.yml -f docker/docker-compose-infra.yml up
 ```
 
-Install app dependencies:
+Install app dependencies in your virtual env:
 
 ```
 pip install -r requirements.txt

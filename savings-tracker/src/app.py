@@ -19,6 +19,10 @@ def create_app():
     app.register_blueprint(bank_account_api, url_prefix='/bank-accounts')
     app.register_blueprint(savings_api, url_prefix='/savings')
 
+    @app.route('/')
+    def index():
+        return "Click <a href=\"/apidocs\">here</a>"
+
     return app
 
 

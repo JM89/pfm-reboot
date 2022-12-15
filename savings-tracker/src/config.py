@@ -102,5 +102,8 @@ def get_parameters_from_aws() -> configparser.ConfigParser:
         raise Exception(DEFAULT_PARAMETER_STORE_ERROR_MSG)
 
 
+print(f"Extracting configuration from {os.getcwd()}/{CONFIG_FILE}.ini")
+
 if get_config_section("AWS") is not None:
+    print("AWS config found...")
     config = get_parameters_from_aws()

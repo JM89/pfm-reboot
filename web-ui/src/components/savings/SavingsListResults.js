@@ -56,7 +56,8 @@ const SavingsListResults = ({ ...rest }) => {
   useEffect(() => {
     retrieveSavings();
     retrieveBankAccounts();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [retrieveSavings, retrieveBankAccounts]);
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);

@@ -21,7 +21,7 @@ services:
       - "5341:5341"
       - "80:80"
 
-  seq-udp-listener:
+  seq-udp-listener: 
     container_name: seq-udp-listener
     image: datalust/seq-input-gelf:2.0
     environment:
@@ -55,10 +55,12 @@ services:
       - 5000
     ports:
       - 5000:5000
-  # web-ui:
-  #   build:
-  #     context: ./web-ui
-  #     dockerfile: Dockerfile
-  #   container_name: web-ui
-  #   ports:
-  #     - 3000:3000
+    restart: on-failure
+
+  web-ui:
+    build:
+      context: ./web-ui
+      dockerfile: Dockerfile
+    container_name: web-ui
+    ports:
+      - 3000:3000

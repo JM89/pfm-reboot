@@ -8,6 +8,8 @@ List of services:
 
 ## Getting Started
 
+Start the dependencies: 
+
 ```
 docker-compose up --build
-```
+``` 

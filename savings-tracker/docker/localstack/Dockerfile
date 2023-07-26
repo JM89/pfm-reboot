@@ -10,6 +10,7 @@ RUN wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_V
     chmod +x /usr/local/bin/terraform && \
     rm terraform_${TF_VERSION}_linux_amd64.zip
 
-COPY ./setup/ /etc/localstack/init/ready.d/
+COPY --chown=localstack ./setup/ /etc/localstack/init/ready.d/
+RUN chmod u+x -R /etc/localstack/init/ready.d
 
 ENTRYPOINT ["docker-entrypoint.sh"]
